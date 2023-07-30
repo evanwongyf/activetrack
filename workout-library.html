@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workout Library</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .video-container {
+      position: relative;
+      overflow: hidden;
+      padding-top: 56.25%; /* 16:9 aspect ratio (h/w * 100%) */
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand navbar-dark custom-bg">
+    <a class="navbar-brand" href="#">ActiveTrack</a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-library.html">Workout Library</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-tracking.html">Workout Tracking</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="progress-tracking.html">Progress Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bmi-tracking.html">BMI Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="challenges.html">Challenges</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="diet-and-nutrition.html">Diet and Nutrition</a>
+      </li>
+    </ul>
+  </nav>
+
+  <header class="jumbotron text-center">
+    <h3>Workout Library</h3>
+  </header>
+
+  <main class="container mt-4">
+    <section class="filter-section">
+      <h2 class='text-center'>Filter</h2>
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select class="form-control" id="category">
+          <option value="">All Categories</option>
+          <option value="Cardio">Cardio</option>
+          <option value="Endurance">Endurance</option>
+          <option value="Strength">Strength Training</option>
+          <option value="Yoga">Yoga</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="difficulty">Difficulty Level:</label>
+        <select class="form-control" id="difficulty">
+          <option value="">All Levels</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+    </section>
+
+    <section id="workout-list" class="workout-list">
+      <h2>Workout Library</h2>
+      <!-- Workout cards will be dynamically generated here -->
+    </section>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2023 Fitness Tracking App. All rights reserved.</p>
+  </footer>
+  <script>
+    const workouts = [
+      {
+        name: "Push-ups",
+        category: "Strength",
+        difficulty: "Intermediate",
+        muscleGroups: ["Chest", "Triceps", "Shoulders"],
+        description: "Perform 3 sets of push-ups with 10 repetitions each.",
+        videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/i9sTjhN4Z3M?controls=0&amp;start=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+        name: "Squats",
+        category: "Endurance",
+        difficulty: "Beginner",
+        muscleGroups: ["Hamstrings", "Glutes", "Quadriceps", "Calves"],
+        description: "Perform 3 sets of squats with 10 repetitions each.",
+        videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/xqvCmoLULNY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+        name: "Sit-ups",
+        category: "Strength",
+        difficulty: "Beginner",
+        muscleGroups: ["Rectus Abdominis", "Hip Flexors"],
+        description: "Perform 3 sets of sit-ups with 10 repetitions each.",
+        videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/jDwoBqPH0jk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+        name: "Pull-ups",
+        category: "Strength",
+        difficulty: "Advanced",
+        muscleGroups: ["Back", "Biceps"],
+        description: "Perform 1 set of pull-ups with 5 repetitions.",
+        videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/eGo4IYlbE5g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Jumping Jacks",
+      category: "Cardio",
+      difficulty: "Beginner",
+      muscleGroups: ["Quadriceps", "Glutes", "Shoulders", "Calves"],
+      description: "Perform 3 sets of 20 jumping jacks.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/nGaXj3kkmrU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Bench Press",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Chest", "Triceps", "Shoulders"],
+      description: "Perform 3 sets of 10 bench presses.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/gRVjAtPip0Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Deadlift",
+      category: "Strength",
+      difficulty: "Advanced",
+      muscleGroups: ["Hamstrings", "Glutes", "Lower Back", "Traps"],
+      description: "Perform 4 sets of 5 deadlifts.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/r4MzxtBKyNE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Kettlebell Swings",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Glutes", "Hamstrings", "Shoulders", "Core"],
+      description: "Perform 3 sets of 15 kettlebell swings.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/sSESeQAir2M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Mountain Climbers",
+      category: "Cardio",
+      difficulty: "Beginner",
+      muscleGroups: ["Quadriceps", "Hamstrings", "Core", "Shoulders"],
+      description: "Perform 3 sets of 30 seconds of mountain climbers.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/cnyTQDSE884" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Overhead Press",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Shoulders", "Triceps"],
+      description: "Perform 3 sets of 10 overhead presses.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/F3QY5vMz_6I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Barbell Squats",
+      category: "Strength",
+      difficulty: "Advanced",
+      muscleGroups: ["Quadriceps", "Glutes", "Hamstrings", "Core"],
+      description: "Perform 4 sets of 8 barbell squats.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/aOzrA4FgnM0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Elliptical Workout",
+      category: "Cardio",
+      difficulty: "Beginner",
+      muscleGroups: ["Quadriceps", "Hamstrings", "Glutes", "Calves"],
+      description: "Spend 30 minutes on the elliptical at a steady pace.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/j38LNpTLwzY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Dumbbell Rows",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Back", "Biceps", "Core"],
+      description: "Perform 3 sets of 10 dumbbell rows on each side.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/roCP6wCXPqo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Planks",
+      category: "Endurance",
+      difficulty: "Intermediate",
+      muscleGroups: ["Core", "Shoulders", "Glutes"],
+      description: "Hold a plank for 3 sets of 30 seconds.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/BQu26ABuVS0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Lunges",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Quadriceps", "Hamstrings", "Glutes"],
+      description: "Perform 3 sets of 10 lunges on each leg.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/3XDriUn0udo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Warrior Sequence",
+      category: "Yoga",
+      difficulty: "Intermediate",
+      muscleGroups: ["Quadriceps", "Hamstrings", "Hips", "Shoulders"],
+      description: "Complete 5 rounds of the Warrior sequence.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/X6xTV9iKGZM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Sun Salutation",
+      category: "Yoga",
+      difficulty: "Beginner",
+      muscleGroups: ["Quadriceps", "Hamstrings", "Lower Back", "Shoulders"],
+      description: "Complete 5 rounds of the Sun Salutation sequence.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/FPjppcOquE4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Burpees",
+      category: "Endurance",
+      difficulty: "Advanced",
+      muscleGroups: ["Chest", "Quadriceps", "Hamstrings", "Core"],
+      description: "Perform 3 sets of 10 burpees, resting for 1 minute between each set.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/qLBImHhCXSw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Box Jumps",
+      category: "Endurance",
+      difficulty: "Intermediate",
+      muscleGroups: ["Quadriceps", "Glutes", "Calves", "Hamstrings"],
+      description: "Perform 3 sets of 10 box jumps, resting for 1 minute between each set.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/YLPQsdRDmB0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
+      },
+      {
+      name: "Barbell Curls",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Biceps", "Forearms"],
+      description: "Perform 3 sets of 10 barbell curls.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/kwG2ipFRgfo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Butterfly Stretch",
+      category: "Yoga",
+      difficulty: "Beginner",
+      muscleGroups: ["Inner Thighs", "Hips"],
+      description: "Hold the Butterfly Stretch for 30 seconds.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/amblBIOKniA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Bicycle Crunches",
+      category: "Endurance",
+      difficulty: "Beginner",
+      muscleGroups: ["Core", "Hip Flexors"],
+      description: "Perform 3 sets of 20 bicycle crunches.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1we3bh9uhqY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Lizard Pose",
+      category: "Yoga",
+      difficulty: "Advanced",
+      muscleGroups: ["Hip Flexors", "Hamstrings", "Quadriceps"],
+      description: "Hold the Lizard Pose for 30 seconds on each side.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/wq0g9wlAuXw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Romanian Deadlift (RDL)",
+      category: "Strength",
+      difficulty: "Intermediate",
+      muscleGroups: ["Hamstrings", "Glutes", "Lower Back"],
+      description: "Perform 3 sets of 8 Romanian Deadlifts.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/7j-2w4-P14I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      {
+      name: "Russian Twists",
+      category: "Endurance",
+      difficulty: "Beginner",
+      muscleGroups: ["Core", "Obliques"],
+      description: "Perform 3 sets of 20 Russian twists with or without a weight.",
+      videoLink: '<iframe width="560" height="315" src="https://www.youtube.com/embed/wkD8rjkodUI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+      },
+      // Add more workout objects as needed
+    ];
+
+    function createWorkoutCard(workout) {
+      const workoutCard = document.createElement("div");
+      workoutCard.classList.add("col-md-6", "workout-card");
+
+      const workoutContent = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${workout.name}</h5>
+            <p class="card-text"><strong>Category:</strong> ${workout.category}</p>
+            <p class="card-text"><strong>Difficulty:</strong> ${workout.difficulty}</p>
+            <p class="card-text"><strong>Muscle Groups:</strong> ${workout.muscleGroups.join(", ")}</p>
+            <p class="card-text">${workout.description}</p>
+            <div class="video-container">
+              ${workout.videoLink}
+            </div>
+          </div>
+        </div>
+      `;
+      workoutCard.innerHTML = workoutContent;
+      return workoutCard;
+    }
+
+    function renderWorkoutList(workouts) {
+      const workoutList = document.getElementById("workout-list");
+      workoutList.innerHTML = "";
+
+      for (let i = 0; i < workouts.length; i += 2) {
+        const row = document.createElement("div");
+        row.classList.add("row");
+
+        for (let j = 0; j < 2 && i + j < workouts.length; j++) {
+          const workout = workouts[i + j];
+          const workoutCard = createWorkoutCard(workout);
+          row.appendChild(workoutCard);
+        }
+
+        workoutList.appendChild(row);
+      }
+    }
+
+    function filterWorkouts(category, difficulty) {
+      const filteredWorkouts = workouts.filter((workout) => {
+        if (category && workout.category !== category) {
+          return false;
+        }
+        if (difficulty && workout.difficulty !== difficulty) {
+          return false;
+        }
+        return true;
+      });
+
+      renderWorkoutList(filteredWorkouts);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const categorySelect = document.getElementById("category");
+      const difficultySelect = document.getElementById("difficulty");
+
+      categorySelect.addEventListener("change", () => {
+        const selectedCategory = categorySelect.value;
+        const selectedDifficulty = difficultySelect.value;
+        filterWorkouts(selectedCategory, selectedDifficulty);
+      });
+
+      difficultySelect.addEventListener("change", () => {
+        const selectedCategory = categorySelect.value;
+        const selectedDifficulty = difficultySelect.value;
+        filterWorkouts(selectedCategory, selectedDifficulty);
+      });
+
+      renderWorkoutList(workouts);
+    });
+  </script>
+</body>
+</html>

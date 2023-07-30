@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fitness Tracking App - BMI Tracking</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #chartContainer {
+      height: 400px;
+    }
+    .canvasjs-chart-title {
+      font-size: 16px;
+    }
+    .slider-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .slider-label {
+      margin: 0 10px;
+    }
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand navbar-dark custom-bg">
+    <a class="navbar-brand" href="#">ActiveTrack</a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-library.html">Workout Library</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-tracking.html">Workout Tracking</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="progress-tracking.html">Progress Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bmi-tracking.html">BMI Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="challenges.html">Challenges</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="diet-and-nutrition.html">Diet and Nutrition</a>
+      </li>
+    </ul>
+  </nav>
+  <header class="jumbotron text-center">
+    <h3>BMI Tracking</h3>
+  </header>
+
+  <main class="container mt-4">
+    <section>
+      <div class="slider-container">
+        <label class="slider-label">Date:</label>
+        <input type="range" id="dateSlider" min="0" max="72" step="1" value="0">
+        <label id="dateLabel" class="slider-label">1/1/23</label>
+      </div>
+      <div class="buttons-container">
+        <button id="prevBtn" class="btn btn-outline-secondary">Previous</button>
+        <button id="nextBtn" class="btn btn-outline-secondary">Next</button>
+        <button id="resetBtn" class="btn btn-danger">Reset</button>
+      </div>
+      <div id="chartContainer"></div>
+    </section>
+  </main>
+  <footer class="bg-dark text-white text-center py-3" style="margin-top: 38px;">
+    <p>&copy; 2023 Fitness Tracking App. All rights reserved.</p>
+  </footer>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script>
+    // Initialize data with 0 values
+    let dailyBMIData = Array(365).fill(0);
+  
+    // Load BMI data from localStorage
+    let bmiData = JSON.parse(localStorage.getItem('bmiData')) || [];
+  
+    // Update progress array based on the BMI data
+    bmiData.forEach(bmiEntry => {
+      let bmiDate = new Date(bmiEntry.date);
+      let dayOfYear = getDayOfYear(bmiDate);
+      dailyBMIData[dayOfYear - 1] = bmiEntry.bmi; // Adjusted here to properly map the date
+    });
+  
+    // Create initial chart
+    let dailyBMIChart = new CanvasJS.Chart("chartContainer", {
+      axisX: {
+        title: "Date",
+        valueFormatString: "DD MMM YYYY"
+      },
+      axisY: {
+        title: "BMI"
+      },
+      data: [{
+        type: "line",
+        dataPoints: [],
+        color: "black" // change line color to black
+      }]
+    });
+  
+    // Render initial chart
+    updateDailyBMIChart(0);
+  
+    // Function to get the day of the year from a date
+    function getDayOfYear(date) {
+      let start = new Date(date.getFullYear(), 0, 0);
+      let diff = date - start + (start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000;
+      let oneDay = 1000 * 60 * 60 * 24;
+      return Math.floor(diff / oneDay);
+    }
+  
+    // Function to get the date from the day of the year
+    function getDateFromDayOfYear(dayOfYear) {
+      let date = new Date(2023, 0, 1);
+      date.setDate(dayOfYear + 1);
+      return date;
+    }
+  
+    // Function to update the chart based on the selected date
+    function updateDailyBMIChart(selectedDayOfYear) {
+      let dataPoints = [];
+      let startDate = Math.max(0, selectedDayOfYear);
+      let endDate = Math.min(364, selectedDayOfYear + 4);
+      for (let i = startDate; i <= endDate; i++) {
+        dataPoints.push({ y: dailyBMIData[i], x: getDateFromDayOfYear(i) });
+      }
+      dailyBMIChart.options.data[0].dataPoints = dataPoints;
+      dailyBMIChart.render();
+  
+      // Update date label
+      document.getElementById('dateLabel').innerText = getDateFromDayOfYear(startDate).toLocaleDateString("en-US") + ' - ' + getDateFromDayOfYear(endDate).toLocaleDateString("en-US");
+  
+      // Update previous/next button states
+      document.getElementById('prevBtn').disabled = selectedDayOfYear == 0;
+      document.getElementById('nextBtn').disabled = selectedDayOfYear >= 360;
+    }
+  
+    // Update chart based on selected date
+    document.getElementById('dateSlider').addEventListener('input', function() {
+      updateDailyBMIChart(parseInt(this.value) * 5);
+    });
+  
+    // Function to navigate to the previous 5 days
+    document.getElementById('prevBtn').addEventListener('click', function() {
+      let currentDate = parseInt(document.getElementById('dateSlider').value);
+      currentDate = Math.max(0, currentDate - 1);
+      document.getElementById('dateSlider').value = currentDate;
+      document.getElementById('dateSlider').dispatchEvent(new Event('input'));
+    });
+  
+    // Function to navigate to the next 5 days
+    document.getElementById('nextBtn').addEventListener('click', function() {
+      let currentDate = parseInt(document.getElementById('dateSlider').value);
+      currentDate = Math.min(72, currentDate + 1);
+      document.getElementById('dateSlider').value = currentDate;
+      document.getElementById('dateSlider').dispatchEvent(new Event('input'));
+    });
+  
+    // Function to reset the BMI data
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      localStorage.setItem
+      ('bmiData', '[]');
+      dailyBMIData = Array(365).fill(0);
+      document.getElementById('dateSlider').value = 0;
+      document.getElementById('dateSlider').dispatchEvent(new Event('input'));
+    });
+  </script>
+</body>
+</html>
+

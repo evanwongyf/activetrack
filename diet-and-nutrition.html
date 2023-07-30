@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Diet and Nutrition</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand navbar-dark custom-bg">
+    <a class="navbar-brand" href="#">ActiveTrack</a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-library.html">Workout Library</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-tracking.html">Workout Tracking</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="progress-tracking.html">Progress Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bmi-tracking.html">BMI Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="challenges.html">Challenges</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="diet-and-nutrition.html">Diet and Nutrition</a>
+      </li>
+    </ul>
+  </nav>
+
+  <header class="jumbotron text-center">
+    <h3>Diet and Nutrition</h3>
+  </header>
+
+  <main class="container mt-4">
+    <section class="filter-section">
+      <h2 class='text-center'>Filter</h2>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="glutenFree">Gluten Free:</label>
+          <input type="checkbox" id="glutenFree">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="vegan">Vegan:</label>
+          <input type="checkbox" id="vegan">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="noDairy">No Dairy:</label>
+          <input type="checkbox" id="noDairy">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="notSpicy">Not Spicy:</label>
+          <input type="checkbox" id="notSpicy">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="mealType">Meal Type:</label>
+        <select class="form-control" id="mealType">
+          <option value="">All Types</option>
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Snack">Snack</option>
+        </select>
+      </div>
+    </section>
+
+    <section id="meal-list" class="meal-list">
+      <h2>Meal Items</h2>
+      <!-- Meal cards will be dynamically generated here -->
+    </section>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2023 Fitness Tracking App. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const meals = [
+      {
+        name: "Sweet Potato Tempeh Bowl",
+        glutenFree: true,
+        vegan: true,
+        noDairy: true,
+        notSpicy: false,
+        mealType: "Lunch",
+        description: "Sautéed tempeh with soy, garlic, and chili served with sweet potatoes and brown rice.",
+        recipeLink: "https://veganfitness.com/recipe/9x24/sweet-potato-tempeh-bowl"
+      },
+      {
+        name: "Smoothie Bowl",
+        glutenFree: true,
+        vegan: true,
+        noDairy: true,
+        notSpicy: true,
+        mealType: "Breakfast", 
+        description: "Innovative sweet silken tofu recipe",
+        recipeLink: "https://veganfitness.com/recipe/qjek/smoothie-bowl"
+      },
+      {
+        name: "Breakfast Bowl",
+        glutenFree: true,
+        vegan: true,
+        noDairy: true,
+        notSpicy: true,
+        mealType: "Breakfast",
+        description: "A twist on the traditional British breakfast.",
+        recipeLink: "https://veganfitness.com/recipe/j2bm/kiwi-blackberry-chia-pudding"
+      },
+      {
+        name: "Kiwi Blackberry Chia Pudding",
+        glutenFree: true,
+        vegan: true,
+        noDairy: true,
+        notSpicy: true,
+        mealType: "Snack",
+        description: "A delightful guilt-free dessert.",
+        recipeLink: "https://veganfitness.com/recipe/j2bm/kiwi-blackberry-chia-pudding"
+      },
+      {
+        name: "Spinach Banana Smoothie",
+        glutenFree: true,
+        vegan: true,
+        noDairy: true,
+        notSpicy: true,
+        mealType: "Breakfast",
+        description: "A refreshing breakfast option loaded with nutrients",
+        recipeLink: "https://hurrythefoodup.com/spinach-banana-smoothie/#recipe"
+      },
+      {
+        name: "Parmesan Baked Tomatoes",
+        glutenFree: true,
+        vegan: true,
+        noDairy: false,
+        notSpicy: true,
+        mealType: "Dinner",
+        description: "A unique side dish / appetiser promising vivid flavors.",
+        recipeLink: "https://healthyfitnessmeals.com/parmesan-baked-tomatoes/"
+      },
+      {
+        name: "Pesto Chicken",
+        glutenFree: true,
+        vegan: false,
+        noDairy: false,
+        notSpicy: true,
+        mealType: "Lunch",
+        description: "A kid-friendly meal option with awesome flavors.",
+        recipeLink: "https://healthyfitnessmeals.com/pesto-chicken-recipe/"
+      },
+      {
+        name: "Spaghetti Casserole",
+        glutenFree: false,
+        vegan: false,
+        noDairy: false,
+        notSpicy: true,
+        mealType: "Dinner",
+        description: "Mouth-watering must-have for our vegetarian noodle-lovers.",
+        recipeLink: "https://healthyfitnessmeals.com/spaghetti-casserole-recipe/"
+      },
+      {
+        name: "Creamy Lemon Pasta",
+        glutenFree: false,
+        vegan: true,
+        noDairy: false,
+        notSpicy: true,
+        mealType: "Lunch",
+        description: "A kid-friendly meal option with awesome flavors.",
+        recipeLink: "https://healthyfitnessmeals.com/vegan-creamy-lemon-pasta/"
+      },
+      // Add more meal objects as needed
+    ];
+
+    function createMealCard(meal) {
+      const mealCard = document.createElement("div");
+      mealCard.classList.add("col-md-6", "meal-card");
+
+      const mealContent = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${meal.name}</h5>
+            <p class="card-text"><strong>Meal Type:</strong> ${meal.mealType}</p>
+            <p class="card-text">${meal.description}</p>
+            <a href="${meal.recipeLink}" target="_blank" class="card-link">Link to Recipe</a>
+          </div>
+        </div>
+      `;
+      mealCard.innerHTML = mealContent;
+      return mealCard;
+    }
+
+    function renderMealList(meals) {
+      const mealList = document.getElementById("meal-list");
+      mealList.innerHTML = "";
+
+      for (let i = 0; i < meals.length; i += 2) {
+        const row = document.createElement("div");
+        row.classList.add("row");
+
+        for (let j = 0; j < 2 && i + j < meals.length; j++) {
+          const meal = meals[i + j];
+          const mealCard = createMealCard(meal);
+          row.appendChild(mealCard);
+        }
+
+        mealList.appendChild(row);
+      }
+    }
+
+    function filterMeals(glutenFree, vegan, noDairy, notSpicy, mealType) {
+      const filteredMeals = meals.filter((meal) => {
+        if (glutenFree && !meal.glutenFree) {
+          return false;
+        }
+        if (vegan && !meal.vegan) {
+          return false;
+        }
+        if (noDairy && !meal.noDairy) {
+          return false;
+        }
+        if (notSpicy && meal.notSpicy === false) { // Corrected condition for not spicy
+          return false;
+        }
+        if (mealType && meal.mealType !== mealType) {
+          return false;
+        }
+        return true;
+      });
+
+      renderMealList(filteredMeals);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const glutenFreeCheckbox = document.getElementById("glutenFree");
+      const veganCheckbox = document.getElementById("vegan");
+      const noDairyCheckbox = document.getElementById("noDairy");
+      const notSpicyCheckbox = document.getElementById("notSpicy");
+      const mealTypeSelect = document.getElementById("mealType");
+
+      glutenFreeCheckbox.addEventListener("change", () => {
+        const glutenFree = glutenFreeCheckbox.checked;
+        const vegan = veganCheckbox.checked;
+        const noDairy = noDairyCheckbox.checked;
+        const notSpicy = notSpicyCheckbox.checked;
+        const mealType = mealTypeSelect.value;
+        filterMeals(glutenFree, vegan, noDairy, notSpicy, mealType);
+      });
+
+      veganCheckbox.addEventListener("change", () => {
+        const glutenFree = glutenFreeCheckbox.checked;
+        const vegan = veganCheckbox.checked;
+        const noDairy = noDairyCheckbox.checked;
+        const notSpicy = notSpicyCheckbox.checked;
+        const mealType = mealTypeSelect.value;
+        filterMeals(glutenFree, vegan, noDairy, notSpicy, mealType);
+      });
+
+      noDairyCheckbox.addEventListener("change", () => {
+        const glutenFree = glutenFreeCheckbox.checked;
+        const vegan = veganCheckbox.checked;
+        const noDairy = noDairyCheckbox.checked;
+        const notSpicy = notSpicyCheckbox.checked;
+        const mealType = mealTypeSelect.value;
+        filterMeals(glutenFree, vegan, noDairy, notSpicy, mealType);
+      });
+
+      notSpicyCheckbox.addEventListener("change", () => {
+        const glutenFree = glutenFreeCheckbox.checked;
+        const vegan = veganCheckbox.checked;
+        const noDairy = noDairyCheckbox.checked;
+        const notSpicy = notSpicyCheckbox.checked;
+        const mealType = mealTypeSelect.value;
+        filterMeals(glutenFree, vegan, noDairy, notSpicy, mealType);
+      });
+
+      mealTypeSelect.addEventListener("change", () => {
+        const glutenFree = glutenFreeCheckbox.checked;
+        const vegan = veganCheckbox.checked;
+        const noDairy = noDairyCheckbox.checked;
+        const notSpicy = notSpicyCheckbox.checked;
+        const mealType = mealTypeSelect.value;
+        filterMeals(glutenFree, vegan, noDairy, notSpicy, mealType);
+      });
+
+      renderMealList(meals);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Progress Graphs</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .chartContainer {
+      height: 300px;
+      width: 100%;
+    }
+    .canvasjs-chart-title {
+      font-size: 16px;
+    }
+    .slider-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .slider-label {
+      margin: 0 10px;
+    }
+    .exercise-section {
+      border: 1px solid #000000;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+  
+  <nav class="navbar navbar-expand navbar-dark custom-bg">
+    <a class="navbar-brand" href="#">ActiveTrack</a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-library.html">Workout Library</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-tracking.html">Workout Tracking</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="progress-tracking.html">Progress Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bmi-tracking.html">BMI Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="challenges.html">Challenges</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="diet-and-nutrition.html">Diet and Nutrition</a>
+      </li>
+    </ul>
+  </nav>
+  <header class="jumbotron text-center">
+    <h3>Progress Charting</h3>
+  </header>
+</head>
+
+<body>
+  <div class="container">
+    <div id="squatsSection" class="exercise-section">
+      <h2 class='text-center'>Squats</h2>
+      <div id="squatsChart" class="chartContainer"></div>
+      <div class="slider-container">
+        <button class="btn btn-outline-secondary prevBtn">Prev</button>
+        <input type="range" min="0" max="72" value="0" class="dateSlider">
+        <span class="slider-label dateLabel"></span>
+        <button class="btn btn-outline-secondary nextBtn">Next</button>
+        <button class="btn btn-danger resetBtn">Reset</button>
+      </div>
+    </div>
+    <div id="situpsSection" class="exercise-section">
+      <h2  class='text-center'>Sit-ups</h2>
+      <div id="situpsChart" class="chartContainer"></div>
+      <div class="slider-container">
+        <button class="btn btn-outline-secondary prevBtn">Prev</button>
+        <input type="range" min="0" max="72" value="0" class="dateSlider">
+        <span class="slider-label dateLabel"></span>
+        <button class="btn btn-outline-secondary nextBtn">Next</button>
+        <button class="btn btn-danger resetBtn">Reset</button>
+      </div>
+    </div>
+    <div id="pushupsSection" class="exercise-section">
+      <h2  class='text-center'>Push-ups</h2>
+      <div id="pushupsChart" class="chartContainer"></div>
+      <div class="slider-container">
+        <button class="btn btn-outline-secondary prevBtn">Prev</button>
+        <input type="range" min="0" max="72" value="0" class="dateSlider">
+        <span class="slider-label dateLabel"></span>
+        <button class="btn btn-outline-secondary nextBtn">Next</button>
+        <button class="btn btn-danger resetBtn">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script>
+    // Load existing workout data from local storage if available
+    let workoutData = JSON.parse(localStorage.getItem('workoutData')) || [];
+
+    // Initialize data with 0 values
+    let dailyExerciseData = {
+      squats: Array(365).fill(0),
+      situps: Array(365).fill(0),
+      pushups: Array(365).fill(0),
+    };
+
+    // Function to update the daily exercise data with the loaded workout data
+    function updateDailyExerciseData() {
+      workoutData.forEach(workout => {
+        const dayOfYear = getDayOfYear(new Date(workout.date));
+        if (workout.exercise === 'Squats') {
+          dailyExerciseData.squats[dayOfYear] += workout.sets * workout.reps;
+        } else if (workout.exercise === 'Sit-ups') {
+          dailyExerciseData.situps[dayOfYear] += workout.sets * workout.reps;
+        } else if (workout.exercise === 'Push-ups') {
+          dailyExerciseData.pushups[dayOfYear] += workout.sets * workout.reps;
+        }
+      });
+    }
+
+    // Functions for date manipulation
+    function getDayOfYear(date) {
+      let start = new Date(date.getFullYear(), 0);
+      let diff = (date - start) + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
+      let oneDay = 1000 * 60 * 60 * 24;
+      return Math.floor(diff / oneDay);
+    }
+
+    function getDateFromDayOfYear(dayOfYear) {
+      let date = new Date(2023, 0);
+      date.setDate(dayOfYear + 1);
+      return date;
+    }
+
+    // Function to create a chart
+    function createChart(container) {
+      return new CanvasJS.Chart(container, {
+        axisX: {
+          valueFormatString: 'DD MMM, YYYY', // Display year along with date
+        },
+        axisY: {
+          includeZero: true,
+        },
+        data: [{
+          type: 'line',
+          color: 'black',
+          markerSize: 5,
+          dataPoints: [],
+        }],
+      });
+    }
+
+    // Functions to handle date range slider
+    function updateSliderAndLabel(slider, label, currentDay) {
+      let startDay = currentDay * 5;
+      let startDate = getDateFromDayOfYear(startDay);
+      let endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 4);
+      slider.value = currentDay;
+      label.textContent = `${startDate.toISOString().substring(0, 10)} to ${endDate.toISOString().substring(0, 10)}`;
+    }
+
+    function updateExerciseChart(chart, exerciseData, currentDay) {
+      let startDay = currentDay * 5;
+      let dataPoints = exerciseData.slice(startDay, startDay + 5).map((value, index) => {
+        return {
+          x: getDateFromDayOfYear(startDay + index),
+          y: value,
+        };
+      });
+      chart.options.data[0].dataPoints = dataPoints;
+      chart.render();
+    }
+
+    function resetWorkoutData() {
+      // Clear localStorage
+      localStorage.removeItem('workoutData');
+      workoutData = [];
+      dailyExerciseData = {
+        squats: Array(365).fill(0),
+        situps: Array(365).fill(0),
+        pushups: Array(365).fill(0),
+      };
+    }
+
+    // Initialization
+    updateDailyExerciseData();
+    const sections = document.querySelectorAll('.exercise-section');
+    sections.forEach(section => {
+      const chartContainer = section.querySelector('.chartContainer');
+      const chart = createChart(chartContainer);
+      const exerciseData = dailyExerciseData[section.id.substring(0, section.id.length - 7)];
+      const slider = section.querySelector('.dateSlider');
+      const label = section.querySelector('.dateLabel');
+      const prevBtn = section.querySelector('.prevBtn');
+      const nextBtn = section.querySelector('.nextBtn');
+      const resetBtn = section.querySelector('.resetBtn');
+      let currentDay = 0;
+
+      slider.addEventListener('input', function () {
+        currentDay = parseInt(this.value);
+        updateSliderAndLabel(slider, label, currentDay);
+        updateExerciseChart(chart, exerciseData, currentDay);
+      });
+
+      prevBtn.addEventListener('click', function () {
+        if (currentDay > 0) {
+          currentDay--;
+          updateSliderAndLabel(slider, label, currentDay);
+          updateExerciseChart(chart, exerciseData, currentDay);
+        }
+      });
+
+      nextBtn.addEventListener('click', function () {
+        if (currentDay < (slider.max / 5)) {
+          currentDay++;
+          updateSliderAndLabel(slider, label, currentDay);
+          updateExerciseChart(chart, exerciseData, currentDay);
+        }
+      });
+
+      resetBtn.addEventListener('click', function () {
+        resetWorkoutData();
+        updateSliderAndLabel(slider, label, 0);
+        updateExerciseChart(chart, dailyExerciseData[section.id.substring(0, section.id.length - 7)], 0);
+      });
+
+      updateSliderAndLabel(slider, label, currentDay);
+      updateExerciseChart(chart, exerciseData, currentDay);
+    });
+  </script>
+    <footer class="bg-dark text-white text-center py-3">
+      <p>&copy; 2023 Fitness Tracking App. All rights reserved.</p>
+    </footer>
+</body>
+</html>

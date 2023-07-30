@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fitness Tracking App - Workout Tracking and BMI Calculation</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand navbar-dark custom-bg">
+    <a class="navbar-brand" href="#">ActiveTrack</a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-library.html">Workout Library</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="workout-tracking.html">Workout Tracking</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="progress-tracking.html">Progress Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bmi-tracking.html">BMI Charting</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="challenges.html">Challenges</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="diet-and-nutrition.html">Diet and Nutrition</a>
+      </li>
+    </ul>
+  </nav>
+
+  <header class="jumbotron text-center">
+    <h3>Workout Tracking and BMI Calculation</h3>
+  </header>
+
+  <main class="container mt-4">
+    <h2 class="text-center">Workout Tracking</h2>
+    <form id="workoutForm">
+      <div class="form-group">
+        <label for="workoutDate">Workout Date:</label>
+        <input type="date" id="workoutDate" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="workoutExercise">Exercise:</label>
+        <select id="workoutExercise" class="form-control" required>
+          <option value="Squats">Squats</option>
+          <option value="Sit-ups">Sit-ups</option>
+          <option value="Push-ups">Push-ups</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="workoutSets">Sets:</label>
+        <input type="number" id="workoutSets" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="workoutReps">Reps:</label>
+        <input type="number" id="workoutReps" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Log Workout</button>
+    </form>
+
+    <h2 class="text-center">BMI Calculation</h2>
+    <form id="bmiForm">
+      <div class="form-group">
+        <label for="bmiDate">BMI Calculation Date:</label>
+        <input type="date" id="bmiDate" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="height">Height (meters):</label>
+        <input type="number" id="height" class="form-control" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" class="form-control" step="0.01" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Calculate BMI</button>
+    </form>
+  </main>
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2023 Fitness Tracking App. All rights reserved.</p>
+  </footer>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Load existing workout data from local storage if available
+    let workoutData = JSON.parse(localStorage.getItem('workoutData')) || [];
+    let bmiData = JSON.parse(localStorage.getItem('bmiData')) || [];
+
+    document.getElementById('workoutForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      logWorkout();
+    });
+
+    document.getElementById('bmiForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      calculateBMI();
+    });
+
+    function logWorkout() {
+      const workoutDate = document.getElementById('workoutDate').value;
+      const exercise = document.getElementById('workoutExercise').value;
+      const sets = parseInt(document.getElementById('workoutSets').value);
+      const reps = parseInt(document.getElementById('workoutReps').value);
+
+      // Create a new workout object
+      const workout = {
+        date: workoutDate,
+        exercise: exercise,
+        sets: sets,
+        reps: reps
+      };
+
+      // Add the workout to the workoutData array
+      workoutData.push(workout);
+
+      // Save the updated workoutData array to local storage
+      localStorage.setItem('workoutData', JSON.stringify(workoutData));
+
+      // Clear the form fields for the next entry
+      document.getElementById('workoutDate').value = '';
+      document.getElementById('workoutExercise').value = '';
+      document.getElementById('workoutSets').value = '';
+      document.getElementById('workoutReps').value = '';
+    }
+
+    function calculateBMI() {
+      const bmiDate = document.getElementById('bmiDate').value;
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+
+      // Calculate BMI
+      const bmi = weight / (height * height);
+
+      // Create a new BMI object
+      const bmiEntry = {
+        date: bmiDate,
+        bmi: bmi
+      };
+
+      // Add the BMI entry to the bmiData array
+      bmiData.push(bmiEntry);
+
+      // Save the updated bmiData array to local storage
+      localStorage.setItem('bmiData', JSON.stringify(bmiData));
+
+      // Clear the form fields for the next entry
+      document.getElementById('bmiDate').value = '';
+      document.getElementById('height').value = '';
+      document.getElementById('weight').value = '';
+    }
+  </script>
+</body>
+</html>
